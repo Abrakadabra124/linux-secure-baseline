@@ -22,9 +22,9 @@ Week 2 establishes the reproducible laboratory and captures the host baseline be
 - [x] Key-only SSH and generated Ansible inventory
 - [x] Integrity-checked node baseline capture
 - [x] Ansible role for SSH, sysctl, journald and limits
-- [ ] Bootstrap execution after host restart
-- [ ] Ansible connectivity smoke test
-- [ ] Idempotency and negative tests on WSL2 nodes
+- [x] Bootstrap execution after host restart
+- [x] Ansible connectivity smoke test
+- [x] Idempotency and negative tests on WSL2 nodes
 
 ## Quick Start
 
@@ -35,6 +35,7 @@ task verify:strict
 task lab:bootstrap
 task ansible:lint
 task ansible:syntax
+task ansible:verify
 ```
 
 The strict verification intentionally fails when required Linux administration tools are absent. See the [host prerequisites runbook](docs/runbooks/host-prerequisites.md) for remediation.

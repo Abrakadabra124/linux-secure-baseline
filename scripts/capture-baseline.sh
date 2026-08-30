@@ -46,7 +46,7 @@ capture operating-system 'uname -a; printf "\nos-release:\n"; cat /etc/os-releas
 capture processes 'ps -eo user,pid,ppid,stat,etimes,comm --sort=-etimes | head -n 101; printf "\nlimits:\n"; ulimit -a'
 capture services 'systemctl --failed --no-pager; printf "\nrunning services:\n"; systemctl list-units --type=service --state=running --no-pager'
 capture networking 'ip -brief address; printf "\nroutes:\n"; ip route; printf "\nlisteners:\n"; ss -lntup; printf "\nresolver:\n"; cat /etc/resolv.conf'
-capture time-sync 'timedatectl status; printf "\ntimesync service:\n"; systemctl status systemd-timesyncd --no-pager'
+capture time-sync 'timedatectl status; printf "\ntimesync service:\n"; systemctl status chrony --no-pager || systemctl status systemd-timesyncd --no-pager'
 capture packages 'if command -v dpkg-query >/dev/null; then dpkg-query -W | sort; elif command -v rpm >/dev/null; then rpm -qa | sort; else exit 127; fi'
 capture security-settings 'printf "umask="; umask; printf "\nselected sysctl:\n"; sysctl kernel.randomize_va_space kernel.kptr_restrict fs.protected_hardlinks fs.protected_symlinks net.ipv4.conf.all.rp_filter; printf "\nsshd effective configuration:\n"; if command -v sshd >/dev/null; then sshd -T | grep -E "^(port|permitrootlogin|passwordauthentication|pubkeyauthentication|maxauthtries) "; else exit 127; fi'
 capture privileged-security 'sudo -n true; printf "sudo_noninteractive=available\n"; if command -v ufw >/dev/null; then sudo -n ufw status verbose; elif command -v nft >/dev/null; then sudo -n nft list ruleset; else exit 127; fi'

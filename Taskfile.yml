@@ -48,3 +48,8 @@ tasks:
     desc: Verify unsafe role inputs fail before changes
     cmds:
       - bash -lc 'bash scripts/test-invalid-ansible-input.sh'
+
+  ansible:verify:
+    desc: Verify the effective baseline on lab nodes
+    cmds:
+      - ansible-playbook -i inventory/generated/hosts.yml playbooks/verify.yml
