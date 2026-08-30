@@ -19,5 +19,20 @@ jobs:
       - name: Validate shell syntax
         run: bash -n scripts/*.sh
 
+      - name: Validate PowerShell syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path scripts/bootstrap-wsl-lab.ps1),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+
       - name: Run non-strict capability report
         run: bash scripts/verify-host.sh
