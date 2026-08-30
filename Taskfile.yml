@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  lint:
+    desc: Validate shell scripts
+    cmds:
+      - bash -n scripts/*.sh
+
+  verify:
+    desc: Print the Linux host capability report
+    cmds:
+      - bash scripts/verify-host.sh
+
+  verify:strict:
+    desc: Fail when required Linux administration tools are missing
+    cmds:
+      - bash scripts/verify-host.sh --strict

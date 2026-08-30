@@ -1,0 +1,27 @@
+name: Engineering task
+description: Plan a verifiable Linux or automation change
+title: "[Task]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Engineering outcome
+      description: What operational or security capability should exist?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List reproducible checks, including a negative path.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and rollback
+      description: State the blast radius and recovery path.
+    validations:
+      required: true
