@@ -5,7 +5,13 @@ tasks:
     desc: Validate shell and PowerShell scripts
     cmds:
       - bash -lc 'bash -n scripts/*.sh'
-      - pwsh -NoProfile -Command '$tokens = $null; $errors = $null; [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path scripts/bootstrap-wsl-lab.ps1), [ref]$tokens, [ref]$errors) | Out-Null; if ($errors) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }'
+      - >-
+        pwsh -NoProfile -Command
+        '$tokens = $null; $errors = $null;
+        [System.Management.Automation.Language.Parser]::ParseFile(
+        (Resolve-Path scripts/bootstrap-wsl-lab.ps1),
+        [ref]$tokens, [ref]$errors) | Out-Null;
+        if ($errors) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }'
 
   verify:
     desc: Print the Linux host capability report
@@ -27,3 +33,13 @@ tasks:
     desc: Capture the current Linux node state
     cmds:
       - bash -lc 'bash scripts/capture-baseline.sh'
+
+  ansible:lint:
+    desc: Lint the Ansible role and playbook
+    cmds:
+      - ansible-lint
+
+  ansible:syntax:
+    desc: Validate the baseline playbook syntax
+    cmds:
+      - ANSIBLE_ROLES_PATH=roles ansible-playbook --syntax-check -i inventory/example/hosts.yml playbooks/site.yml

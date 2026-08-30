@@ -1,0 +1,3 @@
+{% for limit in secure_baseline_limits %}
+{{ limit.domain }} {{ limit.type }} {{ limit.item }} {{ limit.value }}
+{% endfor %}

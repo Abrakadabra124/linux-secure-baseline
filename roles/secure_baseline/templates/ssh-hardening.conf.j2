@@ -1,0 +1,10 @@
+PermitRootLogin {{ secure_baseline_ssh_permit_root_login }}
+PasswordAuthentication {{ secure_baseline_ssh_password_authentication }}
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+MaxAuthTries {{ secure_baseline_ssh_max_auth_tries }}
+AllowAgentForwarding {{ secure_baseline_ssh_allow_agent_forwarding }}
+X11Forwarding {{ secure_baseline_ssh_x11_forwarding }}
+IgnoreRhosts yes
+HostbasedAuthentication no
+PermitEmptyPasswords no
