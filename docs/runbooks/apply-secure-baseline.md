@@ -37,6 +37,14 @@ ansible-playbook -i inventory/generated/hosts.yml playbooks/site.yml --check --d
 
 Review every SSH and sysctl change before removing `--check`.
 
+Validate the fail-fast guard independently:
+
+```bash
+task ansible:test-invalid
+```
+
+The test passes only when an out-of-range SSH authentication limit is rejected by the first role task.
+
 ## Apply
 
 ```bash
