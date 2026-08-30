@@ -17,9 +17,11 @@ Week 2 establishes the reproducible laboratory and captures the host baseline be
 - [x] Repository quality gates and contribution workflow
 - [x] Host capability and dependency verification
 - [x] WSL2-based lab architecture and limitations
-- [ ] Ubuntu control node bootstrap
-- [ ] Two isolated Ubuntu target instances
-- [ ] SSH connectivity and initial Ansible inventory
+- [x] Ubuntu control node bootstrap automation
+- [x] Two isolated Ubuntu target instance automation
+- [x] Key-only SSH and generated Ansible inventory
+- [ ] Bootstrap execution after host restart
+- [ ] Ansible connectivity smoke test
 
 ## Quick Start
 
@@ -27,6 +29,7 @@ Week 2 establishes the reproducible laboratory and captures the host baseline be
 task lint
 task verify
 task verify:strict
+task lab:bootstrap
 ```
 
 The strict verification intentionally fails when required Linux administration tools are absent. See the [host prerequisites runbook](docs/runbooks/host-prerequisites.md) for remediation.
@@ -38,6 +41,7 @@ The local lab uses isolated WSL2 distributions for the control and target nodes.
 - [Architecture and trust boundaries](docs/architecture.md)
 - [ADR-0001: WSL2 lab backend](docs/adr/0001-wsl2-lab-backend.md)
 - [Host prerequisites runbook](docs/runbooks/host-prerequisites.md)
+- [WSL2 lab bootstrap runbook](docs/runbooks/bootstrap-wsl-lab.md)
 
 ## Delivery Standard
 

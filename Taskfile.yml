@@ -2,16 +2,23 @@ version: "3"
 
 tasks:
   lint:
-    desc: Validate shell scripts
+    desc: Validate shell and PowerShell scripts
     cmds:
-      - bash -n scripts/*.sh
+      - bash -lc 'bash -n scripts/*.sh'
+      - pwsh -NoProfile -Command '$tokens = $null; $errors = $null; [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path scripts/bootstrap-wsl-lab.ps1), [ref]$tokens, [ref]$errors) | Out-Null; if ($errors) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }'
 
   verify:
     desc: Print the Linux host capability report
     cmds:
-      - bash scripts/verify-host.sh
+      - bash -lc 'bash scripts/verify-host.sh'
 
   verify:strict:
     desc: Fail when required Linux administration tools are missing
     cmds:
-      - bash scripts/verify-host.sh --strict
+      - bash -lc 'bash scripts/verify-host.sh --strict'
+
+  lab:bootstrap:
+    desc: Create the three-node WSL2 lab
+    platforms: [windows]
+    cmds:
+      - pwsh -NoProfile -File scripts/bootstrap-wsl-lab.ps1
