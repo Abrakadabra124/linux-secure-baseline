@@ -35,7 +35,16 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Reload sysctl
+
+- name: Enforce live kernel security settings
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.d/70-secure-baseline.conf
+    sysctl_set: true
+    reload: false
+  loop: "{{ secure_baseline_sysctl | dict2items }}"
 
 - name: Configure process limits
   ansible.builtin.template:

@@ -52,6 +52,7 @@ ansible-playbook -i inventory/generated/hosts.yml playbooks/site.yml --diff
 ```
 
 Run the same command a second time. A successful idempotency check reports `changed=0` for every host.
+The role verifies both the persistent sysctl file and the live shared WSL2 kernel values, so runtime drift is corrected even when the managed file has not changed.
 
 ## Validate
 
