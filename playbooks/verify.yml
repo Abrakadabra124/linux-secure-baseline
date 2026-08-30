@@ -1,0 +1,71 @@
+---
+- name: Verify the effective Linux security baseline
+  hosts: linux_nodes
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - ../roles/secure_baseline/defaults/main.yml
+
+  tasks:
+    - name: Read the effective SSH configuration
+      ansible.builtin.command: /usr/sbin/sshd -T
+      changed_when: false
+      register: secure_baseline_verify_ssh
+
+    - name: Assert effective SSH hardening
+      ansible.builtin.assert:
+        that:
+          - "'permitrootlogin no' in secure_baseline_verify_ssh.stdout"
+          - "'passwordauthentication no' in secure_baseline_verify_ssh.stdout"
+          - "'maxauthtries 3' in secure_baseline_verify_ssh.stdout"
+          - "'allowagentforwarding no' in secure_baseline_verify_ssh.stdout"
+          - "'x11forwarding no' in secure_baseline_verify_ssh.stdout"
+        quiet: true
+
+    - name: Read effective kernel security settings
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/sysctl
+          - -n
+          - "{{ item.key }}"
+      loop: "{{ secure_baseline_sysctl | dict2items }}"
+      changed_when: false
+      register: secure_baseline_verify_sysctl
+
+    - name: Assert effective kernel security settings
+      ansible.builtin.assert:
+        that:
+          - item.stdout | trim == item.item.value | string
+        fail_msg: "{{ item.item.key }} does not match the managed value"
+        quiet: true
+      loop: "{{ secure_baseline_verify_sysctl.results }}"
+
+    - name: Verify required services are active
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/systemctl
+          - is-active
+          - "{{ item }}"
+      loop:
+        - ssh.socket
+        - "{{ secure_baseline_timesync_service }}"
+        - systemd-journald
+      changed_when: false
+
+    - name: Read failed systemd units
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/systemctl
+          - --failed
+          - --no-legend
+          - --plain
+      changed_when: false
+      register: secure_baseline_verify_failed_units
+
+    - name: Assert systemd has no failed units
+      ansible.builtin.assert:
+        that:
+          - secure_baseline_verify_failed_units.stdout | trim | length == 0
+        fail_msg: "Failed units: {{ secure_baseline_verify_failed_units.stdout }}"
+        quiet: true

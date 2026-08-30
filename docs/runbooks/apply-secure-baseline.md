@@ -56,9 +56,10 @@ Run the same command a second time. A successful idempotency check reports `chan
 ## Validate
 
 ```bash
+task ansible:verify
 ansible all -i inventory/generated/hosts.yml -b -m command -a 'sshd -T'
 ansible all -i inventory/generated/hosts.yml -b -m command -a 'sysctl kernel.randomize_va_space kernel.kptr_restrict'
-ansible all -i inventory/generated/hosts.yml -b -m command -a 'systemctl is-active ssh systemd-journald systemd-timesyncd'
+ansible all -i inventory/generated/hosts.yml -b -m command -a 'systemctl is-active ssh.socket systemd-journald chrony'
 ```
 
 Capture the resulting state and compare manifests and selected evidence files:

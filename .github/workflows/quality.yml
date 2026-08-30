@@ -52,12 +52,11 @@ jobs:
         run: "$RUNNER_TEMP/ansible-venv/bin/ansible-lint"
 
       - name: Check playbook syntax
-        run: >-
-          ANSIBLE_ROLES_PATH=roles
-          "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook"
-          --syntax-check
-          -i inventory/example/hosts.yml
-          playbooks/site.yml
+        run: |
+          ANSIBLE_ROLES_PATH=roles "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook" \
+            --syntax-check -i inventory/example/hosts.yml playbooks/site.yml
+          ANSIBLE_ROLES_PATH=roles "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook" \
+            --syntax-check -i inventory/example/hosts.yml playbooks/verify.yml
 
       - name: Reject unsafe Ansible input
         run: bash scripts/test-invalid-ansible-input.sh

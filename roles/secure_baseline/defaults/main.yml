@@ -1,5 +1,6 @@
 ---
 secure_baseline_packages:
+  - chrony
   - openssh-server
   - sudo
 
@@ -15,6 +16,7 @@ secure_baseline_journald_system_max_use: 256M
 secure_baseline_journald_max_retention_sec: 14day
 
 secure_baseline_manage_timesync: true
+secure_baseline_timesync_service: chrony
 
 secure_baseline_limits:
   - domain: "*"

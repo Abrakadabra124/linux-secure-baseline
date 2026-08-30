@@ -76,7 +76,7 @@
 
 - name: Enable time synchronization
   ansible.builtin.systemd_service:
-    name: systemd-timesyncd
+    name: "{{ secure_baseline_timesync_service }}"
     enabled: true
     state: started
   when: secure_baseline_manage_timesync | bool
