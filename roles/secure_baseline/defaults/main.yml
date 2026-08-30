@@ -1,0 +1,37 @@
+---
+secure_baseline_packages:
+  - openssh-server
+  - sudo
+
+secure_baseline_manage_ssh: true
+secure_baseline_ssh_permit_root_login: "no"
+secure_baseline_ssh_password_authentication: "no"
+secure_baseline_ssh_max_auth_tries: 3
+secure_baseline_ssh_allow_agent_forwarding: "no"
+secure_baseline_ssh_x11_forwarding: "no"
+
+secure_baseline_manage_journald: true
+secure_baseline_journald_system_max_use: 256M
+secure_baseline_journald_max_retention_sec: 14day
+
+secure_baseline_manage_timesync: true
+
+secure_baseline_limits:
+  - domain: "*"
+    type: soft
+    item: nofile
+    value: 65536
+  - domain: "*"
+    type: hard
+    item: nofile
+    value: 65536
+
+secure_baseline_sysctl:
+  fs.protected_hardlinks: 1
+  fs.protected_symlinks: 1
+  kernel.kptr_restrict: 2
+  kernel.randomize_va_space: 2
+  net.ipv4.conf.all.accept_redirects: 0
+  net.ipv4.conf.all.rp_filter: 1
+  net.ipv4.conf.default.accept_redirects: 0
+  net.ipv4.conf.default.rp_filter: 1

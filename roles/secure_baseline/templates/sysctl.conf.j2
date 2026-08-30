@@ -1,0 +1,3 @@
+{% for key, value in secure_baseline_sysctl | dictsort %}
+{{ key }} = {{ value }}
+{% endfor %}
