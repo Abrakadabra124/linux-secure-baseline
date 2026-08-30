@@ -46,6 +46,7 @@ jobs:
         run: |
           python3 -m venv "$RUNNER_TEMP/ansible-venv"
           "$RUNNER_TEMP/ansible-venv/bin/pip" install --disable-pip-version-check -r requirements-dev.txt
+          echo "$RUNNER_TEMP/ansible-venv/bin" >> "$GITHUB_PATH"
 
       - name: Lint Ansible content
         run: "$RUNNER_TEMP/ansible-venv/bin/ansible-lint"
@@ -57,3 +58,6 @@ jobs:
           --syntax-check
           -i inventory/example/hosts.yml
           playbooks/site.yml
+
+      - name: Reject unsafe Ansible input
+        run: bash scripts/test-invalid-ansible-input.sh

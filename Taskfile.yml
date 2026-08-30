@@ -43,3 +43,8 @@ tasks:
     desc: Validate the baseline playbook syntax
     cmds:
       - ANSIBLE_ROLES_PATH=roles ansible-playbook --syntax-check -i inventory/example/hosts.yml playbooks/site.yml
+
+  ansible:test-invalid:
+    desc: Verify unsafe role inputs fail before changes
+    cmds:
+      - bash -lc 'bash scripts/test-invalid-ansible-input.sh'

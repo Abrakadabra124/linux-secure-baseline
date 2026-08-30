@@ -2,8 +2,8 @@
 - name: Validate secure baseline inputs
   ansible.builtin.assert:
     that:
-      - ansible_system == "Linux"
-      - ansible_os_family == "Debian"
+      - ansible_facts["system"] == "Linux"
+      - ansible_facts["os_family"] == "Debian"
       - secure_baseline_ssh_max_auth_tries | int >= 1
       - secure_baseline_ssh_max_auth_tries | int <= 10
       - secure_baseline_ssh_permit_root_login in ["yes", "no", "prohibit-password", "forced-commands-only"]

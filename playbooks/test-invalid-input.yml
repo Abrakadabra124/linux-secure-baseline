@@ -1,0 +1,13 @@
+---
+- name: Reject an unsafe secure baseline configuration
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    secure_baseline_ssh_max_auth_tries: 99
+
+  roles:
+    - role: secure_baseline
