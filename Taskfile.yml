@@ -22,3 +22,8 @@ tasks:
     platforms: [windows]
     cmds:
       - pwsh -NoProfile -File scripts/bootstrap-wsl-lab.ps1
+
+  baseline:
+    desc: Capture the current Linux node state
+    cmds:
+      - bash -lc 'bash scripts/capture-baseline.sh'

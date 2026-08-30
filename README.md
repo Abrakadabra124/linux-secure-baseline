@@ -20,6 +20,7 @@ Week 2 establishes the reproducible laboratory and captures the host baseline be
 - [x] Ubuntu control node bootstrap automation
 - [x] Two isolated Ubuntu target instance automation
 - [x] Key-only SSH and generated Ansible inventory
+- [x] Integrity-checked node baseline capture
 - [ ] Bootstrap execution after host restart
 - [ ] Ansible connectivity smoke test
 
@@ -42,6 +43,7 @@ The local lab uses isolated WSL2 distributions for the control and target nodes.
 - [ADR-0001: WSL2 lab backend](docs/adr/0001-wsl2-lab-backend.md)
 - [Host prerequisites runbook](docs/runbooks/host-prerequisites.md)
 - [WSL2 lab bootstrap runbook](docs/runbooks/bootstrap-wsl-lab.md)
+- [Node baseline capture runbook](docs/runbooks/capture-node-baseline.md)
 
 ## Delivery Standard
 
