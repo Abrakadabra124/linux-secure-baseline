@@ -48,6 +48,9 @@ jobs:
           "$RUNNER_TEMP/ansible-venv/bin/pip" install --disable-pip-version-check -r requirements-dev.txt
           echo "$RUNNER_TEMP/ansible-venv/bin" >> "$GITHUB_PATH"
 
+      - name: Install Ansible collections
+        run: "$RUNNER_TEMP/ansible-venv/bin/ansible-galaxy collection install -r requirements.yml"
+
       - name: Lint Ansible content
         run: "$RUNNER_TEMP/ansible-venv/bin/ansible-lint"
 
