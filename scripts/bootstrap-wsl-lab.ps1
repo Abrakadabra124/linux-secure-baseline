@@ -11,9 +11,9 @@ if ($FallbackDnsServers.Count -eq 0) {
 }
 
 $nodes = @(
-    @{ Name = "linux-control"; Port = 2221; Uid = 1000 },
-    @{ Name = "linux-node1"; Port = 2222; Uid = 1001 },
-    @{ Name = "linux-node2"; Port = 2223; Uid = 1002 }
+    @{ Name = "linux-control"; Port = 2221; Uid = 1100 },
+    @{ Name = "linux-node1"; Port = 2222; Uid = 1101 },
+    @{ Name = "linux-node2"; Port = 2223; Uid = 1102 }
 )
 
 function Get-WslRows {
@@ -68,6 +68,9 @@ foreach ($node in $nodes) {
         & wsl.exe --import $name $installPath $exportPath --version 2
         if ($LASTEXITCODE -ne 0) { throw "Failed to import '$name'." }
     }
+
+    & wsl.exe --terminate $name 2>$null
+    if ($LASTEXITCODE -ne 0) { throw "Failed to stop '$name' before configuration." }
 
     $setup = @"
 set -euo pipefail

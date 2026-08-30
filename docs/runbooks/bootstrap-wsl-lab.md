@@ -33,7 +33,7 @@ task lab:bootstrap
 
 The script exports the base Ubuntu distribution, imports three WSL2 nodes, enables systemd, creates the `devsecops` user, configures key-only SSH and writes an ignored inventory file to `inventory/generated/hosts.yml`.
 
-The nodes use unique local UIDs and SSH socket ports because WSL distributions share parts of the utility VM runtime and network namespace. Hidden `wsl.exe` keepalive processes keep all three distributions running for the duration of the lab. The bootstrap also uses configurable public DNS fallbacks and HTTPS for Ubuntu security updates when the Windows VPN adapter cannot forward WSL DNS or HTTP traffic.
+The nodes use dedicated UIDs outside the base distribution's default range and unique SSH socket ports because WSL distributions share parts of the utility VM runtime and network namespace. Existing nodes are stopped before reconfiguration, so repeated bootstrap runs can safely change local identities. Hidden `wsl.exe` keepalive processes keep all three distributions running for the duration of the lab. The bootstrap also uses configurable public DNS fallbacks and HTTPS for Ubuntu security updates when the Windows VPN adapter cannot forward WSL DNS or HTTP traffic.
 
 ## Validate
 
