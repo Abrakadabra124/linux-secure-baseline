@@ -44,11 +44,16 @@ jobs:
 
       - name: Install Ansible validation dependencies
         run: |
-          python3 -m venv .venv
-          .venv/bin/pip install --disable-pip-version-check -r requirements-dev.txt
+          python3 -m venv "$RUNNER_TEMP/ansible-venv"
+          "$RUNNER_TEMP/ansible-venv/bin/pip" install --disable-pip-version-check -r requirements-dev.txt
 
       - name: Lint Ansible content
-        run: .venv/bin/ansible-lint
+        run: "$RUNNER_TEMP/ansible-venv/bin/ansible-lint"
 
       - name: Check playbook syntax
-        run: ANSIBLE_ROLES_PATH=roles .venv/bin/ansible-playbook --syntax-check -i inventory/example/hosts.yml playbooks/site.yml
+        run: >-
+          ANSIBLE_ROLES_PATH=roles
+          "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook"
+          --syntax-check
+          -i inventory/example/hosts.yml
+          playbooks/site.yml
