@@ -155,8 +155,10 @@ foreach ($name in @("linux-node1", "linux-node2")) {
     Invoke-WslRoot $name "printf '%s\n' '$publicKey' >/home/devsecops/.ssh/authorized_keys; chown devsecops:devsecops /home/devsecops/.ssh/authorized_keys; chmod 0600 /home/devsecops/.ssh/authorized_keys"
 }
 
-& wsl.exe --shutdown
 foreach ($node in $nodes) {
+    & wsl.exe --terminate $node.Name 2>$null
+    if ($LASTEXITCODE -ne 0) { throw "Failed to restart '$($node.Name)' after configuration." }
+
     Start-Process -FilePath wsl.exe -ArgumentList @(
         "-d", $node.Name,
         "-u", "devsecops",
