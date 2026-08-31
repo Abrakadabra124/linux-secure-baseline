@@ -1,0 +1,4 @@
+---
+secure_baseline_journald_system_max_use: 128M
+secure_baseline_journald_max_retention_sec: 7day
+secure_baseline_ssh_max_auth_tries: 3
