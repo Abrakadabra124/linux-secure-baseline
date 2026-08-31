@@ -12,7 +12,7 @@ Linux internals, TCP/IP and TLS diagnostics, idempotent configuration, fault sce
 
 ## Current Milestone
 
-Week 2 establishes the reproducible laboratory and captures the host baseline before any hardening is applied.
+Weeks 2-3 establish the reproducible laboratory, apply the secure baseline and add deterministic troubleshooting failures.
 
 - [x] Repository quality gates and contribution workflow
 - [x] Host capability and dependency verification
@@ -25,6 +25,10 @@ Week 2 establishes the reproducible laboratory and captures the host baseline be
 - [x] Bootstrap execution after host restart
 - [x] Ansible connectivity smoke test
 - [x] Idempotency and negative tests on WSL2 nodes
+- [x] Deterministic DNS, TCP, TLS, permissions and ENOSPC scenarios
+- [x] Automated fault harness with evidence and explicit exit codes
+- [x] Symptom-to-prevention troubleshooting runbooks
+- [x] Layered DNS, route, TCP, TLS and HTTP diagnostic capture
 
 ## Quick Start
 
@@ -36,6 +40,9 @@ task lab:bootstrap
 task ansible:lint
 task ansible:syntax
 task ansible:verify
+task faults:test
+task network:test
+task network:diagnose
 ```
 
 The strict verification intentionally fails when required Linux administration tools are absent. See the [host prerequisites runbook](docs/runbooks/host-prerequisites.md) for remediation.
@@ -50,6 +57,9 @@ The local lab uses isolated WSL2 distributions for the control and target nodes.
 - [WSL2 lab bootstrap runbook](docs/runbooks/bootstrap-wsl-lab.md)
 - [Node baseline capture runbook](docs/runbooks/capture-node-baseline.md)
 - [Apply and validate the Ansible baseline](docs/runbooks/apply-secure-baseline.md)
+- [Fault scenario catalog](docs/runbooks/fault-scenarios.md)
+- [Network path diagnostics](docs/runbooks/network-path-diagnostics.md)
+- [Observed WSL DNS failure and recovery evidence](docs/evidence/week3-network-findings.md)
 
 ## Delivery Standard
 
