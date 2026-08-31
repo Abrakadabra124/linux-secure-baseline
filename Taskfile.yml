@@ -53,3 +53,18 @@ tasks:
     desc: Verify the effective baseline on lab nodes
     cmds:
       - ansible-playbook -i inventory/generated/hosts.yml playbooks/verify.yml
+
+  faults:test:
+    desc: Reproduce all safe Week 3 fault scenarios
+    cmds:
+      - bash -lc 'bash scripts/test-fault-scenarios.sh'
+
+  network:test:
+    desc: Test layered network diagnostics locally
+    cmds:
+      - bash -lc 'bash scripts/test-network-diagnostics.sh'
+
+  network:diagnose:
+    desc: Capture DNS, route, TCP, TLS and HTTP evidence
+    cmds:
+      - bash -lc 'bash scripts/diagnose-network.sh'
