@@ -1,0 +1,13 @@
+---
+secure_baseline_journald_system_max_use: 512M
+secure_baseline_journald_max_retention_sec: 30day
+secure_baseline_ssh_max_auth_tries: 3
+secure_baseline_limits:
+  - domain: "*"
+    type: soft
+    item: nofile
+    value: 131072
+  - domain: "*"
+    type: hard
+    item: nofile
+    value: 131072

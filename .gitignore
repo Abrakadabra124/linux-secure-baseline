@@ -9,3 +9,4 @@
 *.tar.gz
 artifacts/
 inventory/generated/
+inventory/**/group_vars/vault.yml

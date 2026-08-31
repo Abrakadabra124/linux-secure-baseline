@@ -1,0 +1,4 @@
+---
+vault_example_notice: >-
+  Copy this file to vault.yml, replace this notice with required environment
+  secrets, and encrypt the copy with ansible-vault before use.

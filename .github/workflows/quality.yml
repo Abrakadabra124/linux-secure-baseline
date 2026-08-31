@@ -63,9 +63,16 @@ jobs:
       - name: Check playbook syntax
         run: |
           ANSIBLE_ROLES_PATH=roles "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook" \
-            --syntax-check -i inventory/example/hosts.yml playbooks/site.yml
+            --syntax-check -i inventory/dev/hosts.yml playbooks/site.yml
           ANSIBLE_ROLES_PATH=roles "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook" \
-            --syntax-check -i inventory/example/hosts.yml playbooks/verify.yml
+            --syntax-check -i inventory/prod-like/hosts.yml playbooks/site.yml
+          ANSIBLE_ROLES_PATH=roles "$RUNNER_TEMP/ansible-venv/bin/ansible-playbook" \
+            --syntax-check -i inventory/dev/hosts.yml playbooks/verify.yml
+
+      - name: Validate environment inventories
+        run: |
+          "$RUNNER_TEMP/ansible-venv/bin/ansible-inventory" -i inventory/dev/hosts.yml --list >/dev/null
+          "$RUNNER_TEMP/ansible-venv/bin/ansible-inventory" -i inventory/prod-like/hosts.yml --list >/dev/null
 
       - name: Reject unsafe Ansible input
         run: bash scripts/test-invalid-ansible-input.sh

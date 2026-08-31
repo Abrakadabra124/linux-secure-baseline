@@ -29,6 +29,9 @@ Weeks 2-3 establish the reproducible laboratory, apply the secure baseline and a
 - [x] Automated fault harness with evidence and explicit exit codes
 - [x] Symptom-to-prevention troubleshooting runbooks
 - [x] Layered DNS, route, TCP, TLS and HTTP diagnostic capture
+- [x] Separate dev and prod-like Ansible inventories
+- [x] Ignored Ansible Vault workflow without committed secrets
+- [x] Runtime verification strategy and before/after evidence
 
 ## Quick Start
 
@@ -40,6 +43,7 @@ task lab:bootstrap
 task ansible:lint
 task ansible:syntax
 task ansible:verify
+task ansible:inventory
 task faults:test
 task network:test
 task network:diagnose
@@ -53,13 +57,16 @@ The local lab uses isolated WSL2 distributions for the control and target nodes.
 
 - [Architecture and trust boundaries](docs/architecture.md)
 - [ADR-0001: WSL2 lab backend](docs/adr/0001-wsl2-lab-backend.md)
+- [ADR-0002: Ansible verification strategy](docs/adr/0002-ansible-verification-strategy.md)
 - [Host prerequisites runbook](docs/runbooks/host-prerequisites.md)
 - [WSL2 lab bootstrap runbook](docs/runbooks/bootstrap-wsl-lab.md)
 - [Node baseline capture runbook](docs/runbooks/capture-node-baseline.md)
 - [Apply and validate the Ansible baseline](docs/runbooks/apply-secure-baseline.md)
+- [Environment inventories and Vault workflow](docs/runbooks/ansible-inventories.md)
 - [Fault scenario catalog](docs/runbooks/fault-scenarios.md)
 - [Network path diagnostics](docs/runbooks/network-path-diagnostics.md)
 - [Observed WSL DNS failure and recovery evidence](docs/evidence/week3-network-findings.md)
+- [Ansible before/after evidence](docs/evidence/ansible-before-after.md)
 
 ## Delivery Standard
 

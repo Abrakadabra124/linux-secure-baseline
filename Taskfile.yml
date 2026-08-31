@@ -42,7 +42,14 @@ tasks:
   ansible:syntax:
     desc: Validate the baseline playbook syntax
     cmds:
-      - ANSIBLE_ROLES_PATH=roles ansible-playbook --syntax-check -i inventory/example/hosts.yml playbooks/site.yml
+      - ANSIBLE_ROLES_PATH=roles ansible-playbook --syntax-check -i inventory/dev/hosts.yml playbooks/site.yml
+      - ANSIBLE_ROLES_PATH=roles ansible-playbook --syntax-check -i inventory/prod-like/hosts.yml playbooks/site.yml
+
+  ansible:inventory:
+    desc: Validate committed environment inventories
+    cmds:
+      - ansible-inventory -i inventory/dev/hosts.yml --list >/dev/null
+      - ansible-inventory -i inventory/prod-like/hosts.yml --list >/dev/null
 
   ansible:test-invalid:
     desc: Verify unsafe role inputs fail before changes
