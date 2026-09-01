@@ -1,5 +1,6 @@
 $ErrorActionPreference = "Stop"
 $bootstrapPath = Join-Path $PSScriptRoot "bootstrap-wsl-lab.ps1"
+$testLabRoot = Join-Path ([System.IO.Path]::GetTempPath()) "DevSecOpsLab-Input-Test"
 
 function Assert-Rejected {
     param(
@@ -21,11 +22,11 @@ function Assert-Rejected {
 }
 
 Assert-Rejected {
-    & $bootstrapPath -FallbackDnsServers @("1.1.1.1`nEOF`nid")
+    & $bootstrapPath -LabRoot $testLabRoot -FallbackDnsServers @("1.1.1.1`nEOF`nid")
 } "valid IPv4 address"
 
 Assert-Rejected {
-    & $bootstrapPath -BaseDistribution "../Ubuntu"
+    & $bootstrapPath -LabRoot $testLabRoot -BaseDistribution "../Ubuntu"
 } "unsupported characters"
 
 Write-Host "Unsafe bootstrap parameters were rejected before WSL execution."
