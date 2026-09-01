@@ -4,7 +4,7 @@ Reproducible Linux hardening, systemd and networking troubleshooting with tested
 
 ## Status
 
-Planned as **Weeks 2-4** of the [24-week Middle DevSecOps roadmap](https://github.com/Abrakadabra124/github-middle-devsecops-roadmap). Target release: **v1.0.0 by 27 September 2026**.
+Delivered as **Weeks 2-4** of the [24-week Middle DevSecOps roadmap](https://github.com/Abrakadabra124/github-middle-devsecops-roadmap). Current release: **v1.0.0**.
 
 ## Engineering Evidence
 
@@ -12,7 +12,7 @@ Linux internals, TCP/IP and TLS diagnostics, idempotent configuration, fault sce
 
 ## Current Milestone
 
-Weeks 2-3 establish the reproducible laboratory, apply the secure baseline and add deterministic troubleshooting failures.
+Weeks 2-4 establish the reproducible laboratory, apply the secure baseline, add deterministic troubleshooting failures and publish a verified release.
 
 - [x] Repository quality gates and contribution workflow
 - [x] Host capability and dependency verification
@@ -32,6 +32,9 @@ Weeks 2-3 establish the reproducible laboratory, apply the secure baseline and a
 - [x] Separate dev and prod-like Ansible inventories
 - [x] Ignored Ansible Vault workflow without committed secrets
 - [x] Runtime verification strategy and before/after evidence
+- [x] Python health-check with explicit success and failure exit codes
+- [x] Safe systemd, journal, permissions, signals, procfs and limits exercise
+- [x] Loopback reverse-proxy lab with packet-capture and redacted NAT evidence modes
 
 ## Quick Start
 
@@ -39,6 +42,8 @@ Weeks 2-3 establish the reproducible laboratory, apply the secure baseline and a
 task lint
 task verify
 task verify:strict
+task health:test
+task linux:test
 task lab:bootstrap
 task ansible:lint
 task ansible:syntax
@@ -47,6 +52,7 @@ task ansible:inventory
 task faults:test
 task network:test
 task network:diagnose
+task network:lab:test
 ```
 
 The strict verification intentionally fails when required Linux administration tools are absent. See the [host prerequisites runbook](docs/runbooks/host-prerequisites.md) for remediation.
@@ -65,8 +71,13 @@ The local lab uses isolated WSL2 distributions for the control and target nodes.
 - [Environment inventories and Vault workflow](docs/runbooks/ansible-inventories.md)
 - [Fault scenario catalog](docs/runbooks/fault-scenarios.md)
 - [Network path diagnostics](docs/runbooks/network-path-diagnostics.md)
+- [Linux operations lab](docs/runbooks/linux-operations-lab.md)
+- [Reverse proxy and NAT lab](docs/runbooks/reverse-proxy-nat-lab.md)
 - [Observed WSL DNS failure and recovery evidence](docs/evidence/week3-network-findings.md)
 - [Ansible before/after evidence](docs/evidence/ansible-before-after.md)
+- [Security baseline control matrix](docs/security-baseline-controls.md)
+- [Recorded Weeks 2-4 terminal demo](docs/demo/README.md)
+- [Weeks 2-4 completion audit](docs/evidence/weeks-2-4-completion-audit.md)
 
 ## Delivery Standard
 

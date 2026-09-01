@@ -17,16 +17,41 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: Configure SSH hardening drop-in
+- name: Remove legacy late-loading SSH hardening drop-in
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d/70-secure-baseline.conf
+    state: absent
+  when: secure_baseline_manage_ssh | bool
+  notify: Restart SSH
+
+- name: Configure early-loading SSH hardening drop-in
   ansible.builtin.template:
     src: ssh-hardening.conf.j2
-    dest: /etc/ssh/sshd_config.d/70-secure-baseline.conf
+    dest: /etc/ssh/sshd_config.d/05-secure-baseline.conf
     owner: root
     group: root
     mode: "0644"
     validate: /usr/sbin/sshd -t -f %s
   when: secure_baseline_manage_ssh | bool
   notify: Restart SSH
+
+- name: Read effective SSH configuration before restart
+  ansible.builtin.command: /usr/sbin/sshd -T
+  changed_when: false
+  register: secure_baseline_effective_ssh
+  when: secure_baseline_manage_ssh | bool
+
+- name: Assert effective SSH hardening before restart
+  ansible.builtin.assert:
+    that:
+      - "'permitrootlogin ' ~ secure_baseline_ssh_permit_root_login in secure_baseline_effective_ssh.stdout"
+      - "'passwordauthentication ' ~ secure_baseline_ssh_password_authentication in secure_baseline_effective_ssh.stdout"
+      - "'maxauthtries ' ~ (secure_baseline_ssh_max_auth_tries | string) in secure_baseline_effective_ssh.stdout"
+      - "'allowagentforwarding ' ~ secure_baseline_ssh_allow_agent_forwarding in secure_baseline_effective_ssh.stdout"
+      - "'x11forwarding ' ~ secure_baseline_ssh_x11_forwarding in secure_baseline_effective_ssh.stdout"
+    fail_msg: An earlier SSH directive prevents the managed hardening values from taking effect.
+    quiet: true
+  when: secure_baseline_manage_ssh | bool
 
 - name: Configure kernel security settings
   ansible.builtin.template:

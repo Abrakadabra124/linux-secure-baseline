@@ -9,6 +9,7 @@ Security fixes apply to the latest commit on `main` until the first tagged relea
 - Never commit passwords, tokens, SSH private keys or generated WSL exports.
 - Use test fixtures that cannot authenticate to any real system.
 - Keep generated inventory and evidence under ignored local paths.
+- Create raw evidence with private directory and file modes, and sanitize it before publication.
 - Review third-party actions and pin them to immutable commit SHAs.
 
 ## Reporting

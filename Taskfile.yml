@@ -7,11 +7,11 @@ tasks:
       - bash -lc 'bash -n scripts/*.sh'
       - >-
         pwsh -NoProfile -Command
-        '$tokens = $null; $errors = $null;
+        'foreach ($script in Get-ChildItem scripts/*.ps1) {
+        $tokens = $null; $errors = $null;
         [System.Management.Automation.Language.Parser]::ParseFile(
-        (Resolve-Path scripts/bootstrap-wsl-lab.ps1),
-        [ref]$tokens, [ref]$errors) | Out-Null;
-        if ($errors) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }'
+        $script.FullName, [ref]$tokens, [ref]$errors) | Out-Null;
+        if ($errors) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }}'
 
   verify:
     desc: Print the Linux host capability report
@@ -23,16 +23,41 @@ tasks:
     cmds:
       - bash -lc 'bash scripts/verify-host.sh --strict'
 
+  health:test:
+    desc: Test Python health-check success and failure paths
+    cmds:
+      - bash -lc 'bash scripts/test-health-check.sh'
+
+  linux:lab:
+    desc: Exercise systemd, journal, permissions, signals, proc and limits
+    cmds:
+      - bash -lc 'bash scripts/run-linux-operations-lab.sh'
+
+  linux:test:
+    desc: Test the Linux operations lab and evidence integrity
+    cmds:
+      - bash -lc 'bash scripts/test-linux-operations-lab.sh'
+
   lab:bootstrap:
     desc: Create the three-node WSL2 lab
     platforms: [windows]
     cmds:
       - pwsh -NoProfile -File scripts/bootstrap-wsl-lab.ps1
 
+  lab:test-input:
+    desc: Reject unsafe WSL bootstrap parameters before execution
+    cmds:
+      - pwsh -NoProfile -File scripts/test-bootstrap-input.ps1
+
   baseline:
     desc: Capture the current Linux node state
     cmds:
       - bash -lc 'bash scripts/capture-baseline.sh'
+
+  evidence:test:
+    desc: Verify private evidence modes and reject symlink targets
+    cmds:
+      - bash -lc 'bash scripts/test-evidence-output-safety.sh'
 
   ansible:lint:
     desc: Lint the Ansible role and playbook
@@ -75,3 +100,28 @@ tasks:
     desc: Capture DNS, route, TCP, TLS and HTTP evidence
     cmds:
       - bash -lc 'bash scripts/diagnose-network.sh'
+
+  network:lab:
+    desc: Run the loopback reverse-proxy lab
+    cmds:
+      - bash -lc 'python3 scripts/reverse-proxy-lab.py --output artifacts/reverse-proxy-lab'
+
+  network:lab:nat:
+    desc: Run reverse-proxy lab with redacted WSL NAT evidence
+    cmds:
+      - bash -lc 'python3 scripts/reverse-proxy-lab.py --check-egress-nat --output artifacts/reverse-proxy-nat-lab'
+
+  network:lab:test:
+    desc: Test reverse-proxy behavior and evidence integrity
+    cmds:
+      - bash -lc 'bash scripts/test-reverse-proxy-lab.sh'
+
+  demo:
+    desc: Run the complete Weeks 2-4 terminal demo
+    cmds:
+      - bash -lc 'bash scripts/demo-weeks-2-4.sh'
+
+  demo:record:
+    desc: Record the complete demo as an asciicast v2 file
+    cmds:
+      - bash -lc 'python3 scripts/record-demo.py --output docs/demo/weeks-2-4.cast'

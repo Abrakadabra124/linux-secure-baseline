@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
+umask 077
 
 usage() {
   cat <<'EOF'
@@ -79,7 +80,16 @@ for command_name in "${required_commands[@]}"; do
   fi
 done
 
+if [[ -L "$output_directory" || (-e "$output_directory" && ! -d "$output_directory") ]]; then
+  printf 'Output path must be a real directory: %s\n' "$output_directory" >&2
+  exit 64
+fi
+if [[ -d "$output_directory" ]] && find "$output_directory" -mindepth 1 -print -quit | grep -q .; then
+  printf 'Output directory must be empty: %s\n' "$output_directory" >&2
+  exit 64
+fi
 mkdir -p "$output_directory"
+chmod 0700 "$output_directory"
 report_file="$output_directory/report.txt"
 summary_file="$output_directory/summary.env"
 critical_failures=0
