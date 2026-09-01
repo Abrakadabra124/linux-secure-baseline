@@ -22,31 +22,49 @@ jobs:
       - name: Validate PowerShell syntax
         shell: pwsh
         run: |
-          $tokens = $null
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
-            (Resolve-Path scripts/bootstrap-wsl-lab.ps1),
-            [ref]$tokens,
-            [ref]$errors
-          ) | Out-Null
-          if ($errors) {
-            $errors | ForEach-Object { Write-Error $_ }
-            exit 1
+          foreach ($script in Get-ChildItem scripts/*.ps1) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $script.FullName,
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+            if ($errors) {
+              $errors | ForEach-Object { Write-Error $_ }
+              exit 1
+            }
           }
+
+      - name: Reject unsafe bootstrap parameters
+        shell: pwsh
+        run: ./scripts/test-bootstrap-input.ps1
 
       - name: Run non-strict capability report
         run: bash scripts/verify-host.sh
+
+      - name: Test Python health check
+        run: bash scripts/test-health-check.sh
+
+      - name: Exercise Linux operations lab
+        run: bash scripts/test-linux-operations-lab.sh
 
       - name: Exercise baseline capture
         run: |
           bash scripts/capture-baseline.sh --output artifacts/ci-baseline
           sha256sum --check artifacts/ci-baseline/manifest.sha256
 
+      - name: Reject unsafe evidence output paths
+        run: bash scripts/test-evidence-output-safety.sh
+
       - name: Exercise fault scenarios
         run: bash scripts/test-fault-scenarios.sh
 
       - name: Exercise network diagnostics
         run: bash scripts/test-network-diagnostics.sh
+
+      - name: Exercise reverse-proxy lab
+        run: bash scripts/test-reverse-proxy-lab.sh
 
       - name: Install Ansible validation dependencies
         run: |

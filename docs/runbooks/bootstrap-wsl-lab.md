@@ -31,7 +31,7 @@ From an elevated or regular PowerShell terminal in the repository:
 task lab:bootstrap
 ```
 
-The script exports the base Ubuntu distribution, imports three WSL2 nodes, enables systemd, creates the `devsecops` user, configures key-only SSH and writes an ignored inventory file to `inventory/generated/hosts.yml`.
+The script exports the base Ubuntu distribution, imports three WSL2 nodes, enables systemd, creates the `devsecops` user, configures key-only SSH and writes an ignored inventory file to `inventory/generated/hosts.yml`. On first initialization it removes cloned home-directory content, resets machine identity and random-seed state, and generates a unique SSH host key for each node. The temporary export is removed in a `finally` block even when setup fails.
 
 The nodes use dedicated UIDs outside the base distribution's default range and unique SSH socket ports because WSL distributions share parts of the utility VM runtime and network namespace. Existing nodes are stopped before reconfiguration, so repeated bootstrap runs can safely change local identities. The script restarts only its own distributions and leaves unrelated WSL workloads such as Docker Desktop running. Hidden `wsl.exe` keepalive processes keep all three distributions running for the duration of the lab. The bootstrap also uses configurable public DNS fallbacks and HTTPS for Ubuntu security updates when the Windows VPN adapter cannot forward WSL DNS or HTTP traffic.
 
@@ -53,11 +53,18 @@ wsl -d linux-control -- ansible all -i /home/devsecops/lab/inventory/hosts.yml -
 ```
 
 Replace `/mnt/c/path/to/repository` with the repository path translated to WSL syntax.
+When copying the whole repository from a Windows-mounted path, normalize its Linux modes before running Ansible so `ansible.cfg` is not ignored as world-writable:
+
+```bash
+chmod -R u=rwX,go=rX /home/devsecops/lab/linux-secure-baseline
+```
 
 ## Security Notes
 
 - Password authentication and root SSH login are disabled.
 - The private key stays inside `linux-control`.
+- Target host keys are copied directly from the local WSL distributions into the control node's `known_hosts`; Ansible host-key checking remains enabled.
+- DNS fallback parameters accept IPv4 addresses only and cannot inject content into the root setup script.
 - The generated inventory, exports and keys are ignored by Git.
 - Passwordless sudo is limited to this disposable local lab and must not be copied to production hosts.
 

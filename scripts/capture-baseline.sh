@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
+umask 077
 
 strict=0
 output_directory="artifacts/baseline-$(date -u +%Y%m%dT%H%M%SZ)"
@@ -21,7 +22,16 @@ while (($# > 0)); do
   esac
 done
 
+if [[ -L "$output_directory" || (-e "$output_directory" && ! -d "$output_directory") ]]; then
+  printf 'Output path must be a real directory: %s\n' "$output_directory" >&2
+  exit 64
+fi
+if [[ -d "$output_directory" ]] && find "$output_directory" -mindepth 1 -print -quit | grep -q .; then
+  printf 'Output directory must be empty: %s\n' "$output_directory" >&2
+  exit 64
+fi
 mkdir -p "$output_directory"
+chmod 0700 "$output_directory"
 warnings_file="$output_directory/warnings.txt"
 : >"$warnings_file"
 warning_count=0

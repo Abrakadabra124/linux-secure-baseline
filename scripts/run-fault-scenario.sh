@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
+umask 077
 
 usage() {
   cat <<'EOF'
@@ -44,7 +45,16 @@ while (($# > 0)); do
 done
 
 script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -L "$output_directory" || (-e "$output_directory" && ! -d "$output_directory") ]]; then
+  printf 'Output path must be a real directory: %s\n' "$output_directory" >&2
+  exit 64
+fi
+if [[ -d "$output_directory" ]] && find "$output_directory" -mindepth 1 -print -quit | grep -q .; then
+  printf 'Output directory must be empty: %s\n' "$output_directory" >&2
+  exit 64
+fi
 mkdir -p "$output_directory"
+chmod 0700 "$output_directory"
 evidence_file="$output_directory/evidence.log"
 summary_file="$output_directory/summary.env"
 : >"$evidence_file"
